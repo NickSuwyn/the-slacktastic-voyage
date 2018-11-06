@@ -3,9 +3,17 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose = require('mongoose');
+
+const CONNECTION_STRING = 'mongodb://must-jarv:Abc!2345@ds239911.mlab.com:39911/must-jarv';
+
+mongoose.connect(CONNECTION_STRING)
+  .then(() => console.log('connection established'))
+  .catch((err) => console.log(err));
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const messageRouter = require('./routes/message');
 
 var app = express();
 
@@ -21,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/messages', messageRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
