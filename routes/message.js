@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Message = require('../models/message');
-const UserMessage = require('../models/user-message').model;
+const service = require('../services/message-service');
 
 
 /* GET users listing. */
@@ -11,27 +10,13 @@ router.get('/', (req, res) => {
     .catch((err) => res.json(err));
 });
 
-//TODO: implement query to update userMessage.hasRead to true
-//TODO: implement query for user to get all unread messages
-//TODO: implement query for author to get all users who need to read their messages by message
+router.post('/read', (req, res) => {
+  service.markMessageAsRead(req.body.text /*???*/, req.body.user_id, 
+    (data) => res.json(data));
+});
 
-//testing creating a new message document
-router.post('/', (req, res) => {
-  const message = new Message();
-  message.data = 'hello world';
-  message.authorId = 'nickid';
-  message.authorName = 'nick';
-  message.channelId = 'random';
-  userMessage1 = new UserMessage();
-  userMessage1.userId = 'someoneITagged';
-  userMessage2 = new UserMessage();
-  userMessage2.userId = 'someoneElseITagged';
-  message.userMessages = [];
-  message.userMessages.push(userMessage1);
-  message.userMessages.push(userMessage2);
-  message.save()
-    .then((message) => res.json(message))
-    .catch((err) => res.json(err));
+router.post('/unread', (req, res) => {
+  service.getAllUnreadMessages(req.body.user_id, (data) => res.json(data));
 });
 
 module.exports = router;
