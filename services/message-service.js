@@ -1,44 +1,68 @@
 const Message = require('../models/message');
 const UserMessage = require('../models/user-message').model;
 
-//TODO: implement query for author to get all users who need to read their messages by message
+const db = [
+    {
+        msgText: 'hello world',
+        authorId: '1234',
+        authorName: 'nick',
+        channelId: 'random',
+        userMessages: [
+            {userId: '1235'},
+            {userId: '1236'},
+            {userId: '1237'},
+            {userId: '1238'}
+        ]
+    },
+    {
+        msgText: 'hello world 2',
+        authorId: '1234',
+        authorName: 'nick',
+        channelId: 'random',
+        userMessages: [
+            {userId: '1235'},
+            {userId: '1236'},
+            {userId: '1237'},
+            {userId: '1238'}
+        ]
+    }
+];
 
-const markMessageAsRead = (messageId, userId, callback) => {
-    Message.findById(messageId)
-        .then((message) => {
-            message.userMessages.forEach(um => {
-                if (um.userId == userId) {
-                    um.hasRead = true;
-                }
-            });
-
-            message.save()
-                .then(callback)
-                .catch(callback);
-        });
-};
-
-const getAllUnreadMessages = (userId, callback) => {
-    Message.find({'userMessages.userId': userId, 'userMessages.hasRead': {$ne: true}})
-        .then(callback)
-        .catch(callback);
-};
-
-const checkMessageStatus = (authorId, callback) => {
-    Message.find({'authorId': authorId})
-        .then((messages) => {
-            messageStats = [];
-            messages.forEach(message => {
-                let read = [];
-                let unread = [];
-                message.userMessages.forEach(um => {
-                    um.hasRead ? read.push(um.userId) : unread.push(um.userId);
-                });
-                messageStats.push(new MessageStatus(message.data, read, unread));
-            });
-            callback(messageStats);
+const markMessagesAsRead = (userId) => {
+    db.forEach(message => {
+        message.userMessages.forEach(um => {
+            if (um.userId == userId) {
+                um.hasRead = true;
+            }
         })
-        .catch(callback);
+    });
+};
+
+const getAllUnreadMessages = (userId) => {
+    const unreadMessages = [];
+    db.forEach(message => {
+        message.userMessages.forEach(um => {
+            if (um.userId == userId && um.hasRead != true) {
+                unreadMessages.push(message);
+            }
+        });
+    });
+    return unreadMessages;
+};
+
+const checkMessageStatus = (authorId) => {
+    const messageStats = [];
+    db.forEach(message => {
+        if (message.authorId == authorId) {
+            let read = [];
+            let unread = [];
+            message.userMessages.forEach(um => {
+                um.hasRead ? read.push(um.userId) : unread.push(um.userId);
+            });
+            messageStats.push(new MessageStatus(message.data, read, unread));
+        }
+    });
+    return messageStats;
 };
 
 function MessageStatus(message, read, unread) {
@@ -48,7 +72,7 @@ function MessageStatus(message, read, unread) {
 }
 
 module.exports = {
-    markMessageAsRead,
+    markMessagesAsRead,
     getAllUnreadMessages,
     checkMessageStatus
 };

@@ -11,16 +11,15 @@ router.get('/', (req, res) => {
 });
 
 router.post('/read', (req, res) => {
-  service.markMessageAsRead(req.body.text /*???*/, req.body.user_id, 
-    data => res.json(data));
+  res.json(service.markMessagesAsRead(req.body.user_id));
 });
 
 router.post('/unread', (req, res) => {
-  service.getAllUnreadMessages(req.body.user_id, data => res.json(data));
+  res.json(service.getAllUnreadMessages(req.body.user_id));
 });
 
 router.post('/check', (req, res) => {
-  service.checkMessageStatus(req.body.user_id, data => res.json(data));
+  res.json(service.checkMessageStatus(req.body.user_id));
 });
 
 module.exports = router;

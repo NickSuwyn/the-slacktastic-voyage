@@ -5,11 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
 
-const CONNECTION_STRING = 'mongodb://must-jarv:Abc!2345@ds239911.mlab.com:39911/must-jarv';
+// const CONNECTION_STRING = 'mongodb://must-jarv:Abc!2345@ds239911.mlab.com:39911/must-jarv';
 
-mongoose.connect(CONNECTION_STRING)
-  .then(() => console.log('connection established'))
-  .catch((err) => console.log(err));
+// mongoose.connect(CONNECTION_STRING)
+//   .then(() => console.log('connection established'))
+//   .catch((err) => console.log(err));
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
