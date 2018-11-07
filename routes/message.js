@@ -22,4 +22,9 @@ router.post('/check', (req, res) => {
   res.json(service.checkMessageStatus(req.body.user_id));
 });
 
+router.post('/save', (req, res) => {
+  res.json(service.saveMessage(req.body.author_id, req.body.author_name, 
+    req.body.msg_text, req.body.user_ids, req.body.channel_id));
+});
+
 module.exports = router;

@@ -65,6 +65,25 @@ const checkMessageStatus = (authorId) => {
     return messageStats;
 };
 
+const saveMessage = (authorId, authorName, message, userIds, channelId) => {
+    const userMessages = [];
+
+    if (userIds.length) {
+        userIds.forEach(id => userMessages.push({userId: id}));
+    }
+
+    const newMessage = {
+        msgText: message,
+        authorId: authorId,
+        authorName: authorName,
+        chanelId: channelId,
+        userMessages: userMessages
+    };
+
+    db.push(newMessage);
+    return newMessage;
+};
+
 function MessageStatus(message, read, unread) {
     this.message = message;
     this.read = read;
@@ -74,5 +93,6 @@ function MessageStatus(message, read, unread) {
 module.exports = {
     markMessagesAsRead,
     getAllUnreadMessages,
-    checkMessageStatus
+    checkMessageStatus,
+    saveMessage
 };
